@@ -5,7 +5,8 @@ import threading
 HEX_FILTER = ''.join([(len(repr(chr(i))) == 3) and chr(i) or '.' for i in range (256)])
 
 def hexdump(src, length = 16, show = True):
-
+    if isinstance(src, bytes):
+        src = src.decodes()
     results = list()
     length = 16
     for i in range(0, len(src), length):
@@ -20,5 +21,27 @@ def hexdump(src, length = 16, show = True):
     else: 
         return results
 
+
+def receive_from(connection):
+    buffer = b""
+    connection.settimeout(5)
+    try:
+        while True:
+            data = connection.recv(4096)
+            if not data:
+                break
+            buffer += data
+    except Exception as e:
+        pass
+    return buffer
+
+def request_handler(buffer):
+    # perform packet modifications
+    return buffer
+
+def response_handler(buffer):
+    #perform packet modifications
+    return buffer
+
 if __name__ == '__main__':
-    hexdump('1233242klasjgd alkmflkasjf laksjf aksldj flasjd flkas jfkjafk l')
+    hexdump('python rocks\n and proxies roll\n')
